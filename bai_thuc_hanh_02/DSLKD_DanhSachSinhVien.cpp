@@ -5,67 +5,152 @@ typedef struct{
 	char hoTen[30];
 	int maSV;
 	float d1, d2, d3; 
-}Data; 
+}SV; 
 typedef struct tagNode{
-	Data infor;
-	struct tagNode *link; 
+	SV infor;
+	struct tagNode *prev, *next; 
 }Node; 
 typedef struct{
 	Node *pHead;
 	Node *pTail;
 	int spt = 0; 
-}LList;
+}DList;
 //////////////////////////////////////////////////
-void initList(LList *L){
+//void initList(LList *L){
+//	L->pHead = NULL;
+//	L->pTail = NULL;
+//	L->spt =  0; 
+//} 
+void initList(DList *L){
 	L->pHead = NULL;
 	L->pTail = NULL;
-	L->spt =  0; 
-} 
-int emptyList(LList L){
-	return (L.spt==0); 
-} 
-void insertHead(LList *L, Data x){
+	L->spt = 0;
+}
+//int emptyList(LList L){
+//	return (L.spt==0); 
+//} 
+
+int emptyList(DList L){
+	return (L.spt == 0);
+}
+//void insertHead(LList *L, SV x){
+//	Node *pp;
+//	pp = (Node*)malloc(sizeof(Node));
+//	pp->infor = x;
+//	pp->link = NULL;
+//	if(emptyList(*L)){
+//		L->pHead = pp;
+//		L->pTail = pp; 
+//	} 
+//	else{
+//		pp->link = L->pHead;
+//		L->pHead = pp; 
+//	} 
+//	L->spt++; 
+//}
+
+void insertHead(DList *L, SV x){
 	Node *pp;
 	pp = (Node*)malloc(sizeof(Node));
 	pp->infor = x;
-	pp->link = NULL;
+	pp->prev = NULL;
+	pp->next = NULL;
 	if(emptyList(*L)){
 		L->pHead = pp;
-		L->pTail = pp; 
-	} 
+		L->pTail = pp;
+	}
 	else{
-		pp->link = L->pHead;
-		L->pHead = pp; 
-	} 
-	L->spt++; 
+		L->pHead->prev = pp;
+		pp->next = L->pHead;
+		L->pHead = pp;
+	}
+	L->spt++;
 } 
-void insertTail(LList *L, Data x){
+//void insertTail(LList *L, Data x){
+//	Node *pp;
+//	pp = (Node*)malloc(sizeof(Node));
+//	pp->infor = x;
+//	pp->link = NULL;
+//	if(emptyList(*L)){
+//		L->pHead = pp;
+//		L->pTail = pp; 
+//	} 
+//	else{
+//		L->pTail->link = pp;
+//		L->pTail = pp; 
+//	} 
+//	L->spt++; 
+//} 
+
+void insertTail(DList *L, SV x){
 	Node *pp;
 	pp = (Node*)malloc(sizeof(Node));
 	pp->infor = x;
-	pp->link = NULL;
+	pp->prev = NULL;
+	pp->next = NULL;
 	if(emptyList(*L)){
 		L->pHead = pp;
-		L->pTail = pp; 
-	} 
+		L->pTail = pp;
+	}
 	else{
-		L->pTail->link = pp;
-		L->pTail = pp; 
-	} 
-	L->spt++; 
-} 
-void insertAfter(LList *L, Node *q, Data x){
+		L->pTail->next = pp;
+		pp->prev = L->pTail;
+		L->pTail = pp;
+	}
+	L->spt++;
+}
+//void insertAfter(LList *L, Node *q, Data x){
+//	Node *pp;
+//	if(q==NULL) return;
+//	else{
+//		pp = (Node*)malloc(sizeof(Node));
+//		pp->infor = x;
+//		pp->link = q->link;
+//		q->link = pp;
+//		if(q==L->pTail) L->pTail = pp; 
+//		L->spt++; 
+//	} 
+//} 
+
+void insertAfter(DList *L, Node *q, SV x){
 	Node *pp;
-	if(q==NULL) return;
+	if(q == NULL) return;
 	else{
 		pp = (Node*)malloc(sizeof(Node));
 		pp->infor = x;
-		pp->link = q->link;
-		q->link = pp;
-		if(q==L->pTail) L->pTail = pp; 
-		L->spt++; 
-	} 
-} 
+//		pp->link = NULL;
+//		pp->link = q->link;
+//		q->link = pp;
+		pp->next
+		if(q == L->pTail)
+			L->pTail = pp;
+		L->spt++;
+	}
+}
+void chenTang(LList *L, SV x)P{
+	Node *pp = L->pHead, *q;
+	while(pp != NULL && pp->infor.maSV < x.maSV){
+		q = pp;
+		pp = pp->link;
+	}
+	if(pp == L->pHead)
+		insertHead(L,x);
+	else
+		insertAfter(L,q,x);
+}
+//void delHead(LList *L){
+//	Node *pp;
+//	if(emptyList(*L)) return;
+//	else{
+//		pp = L->pHead;
+//		L->pHead = pp->link;
+//		free(pp);
+//		L->spt--; 
+//		if(L->pHead == NULL)
+//			L->pTail = NULL;  
+//	} 
+//} 
+
 void delHead(LList *L){
 	Node *pp;
 	if(emptyList(*L)) return;
@@ -73,25 +158,39 @@ void delHead(LList *L){
 		pp = L->pHead;
 		L->pHead = pp->link;
 		free(pp);
-		L->spt--; 
-		if(L->pHead == NULL)
-			L->pTail = NULL;  
-	} 
-} 
+		L->spt--;
+		if(L->pHead==NULL)
+			L->pTail = NULL;
+	}
+}
+
+//void delAfter(LList *L, Node *q){
+//	Node *pp;
+//	if(q==NULL) return;
+//	else{
+//		pp = q->link;
+//		if(L->pTail == q->link)
+//			L->pTail = q;
+//		q->link = pp->link;
+//		free(pp);
+//		L->spt--; 
+//	} 
+//} 
+
 void delAfter(LList *L, Node *q){
 	Node *pp;
-	if(q==NULL) return;
+	if(q == NULL) return;
 	else{
 		pp = q->link;
-		if(L->pTail == q->link)
+		if(q->link == L->pTail)
 			L->pTail = q;
 		q->link = pp->link;
 		free(pp);
-		L->spt--; 
-	} 
-} 
+		L->spt--;
+	}
+}
 /////////////////////////////////////////
-void nhapDL(Data *x){
+void nhapDL(SV *x){
 	printf("Nhap ma SV: ");
 	scanf("%d",&(x->maSV));
 	if(x->maSV>0){
@@ -107,7 +206,7 @@ void nhapDL(Data *x){
 		scanf("%f",&(x->d3));		 
 	} 
 } 
-void inDL(Data x){
+void inDL(SV x){
 	printf("Ten: %s, Ma: %d, Diem 1: %.2f, Diem 2: %.2f, Diem 3: %.2f\n",
 	x.hoTen, x.maSV, x.d1, x.d2, x.d3); 
 } 
@@ -124,6 +223,8 @@ Node *search(LList L, int id){
 		pp = pp->link;
 	return pp; 
 } 
+
+
 //////////////////////////////////////////////////////////
 int main(){
 	LList L;
@@ -138,6 +239,7 @@ int main(){
 		printf("\n3: Them nut vao sau mot nut khac trong danh sach");
 		printf("\n4: Xoa nut dau danh sach"); 
 		printf("\n5: Xoa nut sau mot nut khac trong danh sach"); 
+		printf("\n6: Them nut theo chieu tang ma sinh vien")
 		printf("\n9: Duyet danh sach");
 		printf("\n0: Thoat");
 		printf("\nMoi ban chon: ");
